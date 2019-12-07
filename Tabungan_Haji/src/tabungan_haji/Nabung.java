@@ -1,0 +1,617 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tabungan_haji;
+
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
+
+/**
+ *
+ * @author user
+ */
+public class Nabung extends javax.swing.JFrame {
+    private static String idjamaahVar, namaVar, jenisVar, batasVar;
+    private DefaultTableModel model;
+    
+    /**
+     * Creates new form Nabung
+     */
+    public Nabung(String idjamaah,String nama,String jenis,String batas) {
+        initComponents();
+        text_id_jamaah.setText(idjamaah);
+        text_nama.setText(nama);
+        text_jenis.setText("Haji "+jenis);
+        text_batas.setText(batas);
+        text_id.setVisible(false);
+        setLocation(400, 50);
+        setIcon();
+        setTitle("Angsuran "+nama);
+        this.komponen("awal");
+        
+        model();
+        jumlah();
+        batasjumlah();        
+    }
+    
+    private void setIcon(){
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("iconkabah.png")));
+    }
+    
+    public void jumlah(){
+        
+        try{
+            String id = text_id_jamaah.getText();
+       
+            String sql = ("SELECT sum(tabungan) as jumlah from rincian where id_jamaah="+id);
+            
+            Connection conn = (Connection)tabungan_haji.koneksi.koneksiDB();
+            Statement stm = conn.createStatement();
+            ResultSet result = stm.executeQuery(sql);
+            if (result.next()) {
+                text_jumlah.setText(result.getString("jumlah"));
+                
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    public void batasjumlah(){
+        String batas = text_batas.getText();
+        String jumlah = text_jumlah.getText();
+
+        int batasa = Integer.valueOf(batas);
+        int jumlaha = Integer.valueOf(jumlah);
+        int kurang = batasa-jumlaha;
+        
+        text_kurang.setText(String.valueOf(kurang));
+        
+      try{  
+        if (jumlaha>=batasa){
+            JOptionPane.showMessageDialog(null, "Tabungan Anda sudah mencukupi untuk biaya pemberangkat Haji", "Tabungan", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("icons8-withdrawal-limit-48.png"));
+            }
+      }catch (Exception e) {
+        }
+    }
+        
+    public void model(){
+        
+        model=new DefaultTableModel();
+        tabel_rincian.setModel(model);
+        model.addColumn("ID");
+        model.addColumn("Tanggal Nabung");
+        model.addColumn("Bulan Nabung");
+        model.addColumn("Tahun Nabung");
+        model.addColumn("Tabungan");
+               
+        getdata();
+    }
+
+    private void kosongForm(){
+        text_id.setText("0");
+        text_angsuran.setText("0");
+        text_tahun.setText("Tahun");
+        combo_bulan.setSelectedItem("Bulan");
+        combo_tanggal.setSelectedItem("Tanggal");
+    }
+    
+    private void komponen(String action){
+        switch(action){
+            case "awal":
+                bt_edit.setEnabled(false);
+                text_batas.setEnabled(false);
+                bt_simpan.setEnabled(true);
+                bt_hapus.setEnabled(false);
+                break;
+            case "klik":
+                bt_edit.setEnabled(true);
+                bt_simpan.setEnabled(false);
+                bt_hapus.setEnabled(true);
+                break;
+            case "edit":
+                bt_simpan.setEnabled(true);
+                bt_edit.setEnabled(false);
+                bt_hapus.setEnabled(false);
+        }
+    }
+    public void getdata(){
+        try{
+            String id = text_id_jamaah.getText();
+            Connection conn = (Connection)tabungan_haji.koneksi.koneksiDB();
+            Statement stmt = conn.createStatement();
+            ResultSet data = stmt.executeQuery("select* from rincian where id_jamaah="+id);
+            
+            while (data.next()){
+                Object[] obj = new Object[5];
+                obj[0]= data.getString("id");
+                obj[1]= data.getString("tanggal_nabung");
+                obj[2]= data.getString("bulan_nabung");
+                obj[3]= data.getString("tahun_nabung");
+                obj[4]= data.getString("tabungan");
+                
+                model.addRow(obj);
+                
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        bt_simpan = new javax.swing.JButton();
+        bt_batal = new javax.swing.JButton();
+        text_angsuran = new javax.swing.JTextField();
+        combo_tanggal = new javax.swing.JComboBox();
+        combo_bulan = new javax.swing.JComboBox();
+        text_tahun = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabel_rincian = new javax.swing.JTable();
+        bt_edit = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        text_kurang = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        text_nama = new javax.swing.JLabel();
+        text_id_jamaah = new javax.swing.JLabel();
+        text_jenis = new javax.swing.JLabel();
+        text_id = new javax.swing.JLabel();
+        text_batas = new javax.swing.JTextField();
+        bt_hapus = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        bt_refresh = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        text_jumlah = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel4.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel4.setText("Angsuran");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 87, -1));
+
+        jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel5.setText("Tanggal Angsuran");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, -1, -1));
+
+        bt_simpan.setBackground(new java.awt.Color(255, 255, 255));
+        bt_simpan.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        bt_simpan.setForeground(new java.awt.Color(102, 51, 0));
+        bt_simpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/save_item [#1409].png"))); // NOI18N
+        bt_simpan.setText("Simpan");
+        bt_simpan.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 1, 11))); // NOI18N
+        bt_simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_simpanActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bt_simpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 380, -1, -1));
+
+        bt_batal.setBackground(new java.awt.Color(255, 255, 255));
+        bt_batal.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        bt_batal.setForeground(new java.awt.Color(102, 51, 0));
+        bt_batal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/arrow_left [#361].png"))); // NOI18N
+        bt_batal.setText("Kembali");
+        bt_batal.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 1, 11))); // NOI18N
+        bt_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_batalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bt_batal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 100, 30));
+
+        text_angsuran.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_angsuran.setForeground(new java.awt.Color(102, 51, 0));
+        text_angsuran.setText("0");
+        text_angsuran.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_angsuran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                text_angsuranActionPerformed(evt);
+            }
+        });
+        getContentPane().add(text_angsuran, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 320, 370, -1));
+
+        combo_tanggal.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        combo_tanggal.setForeground(new java.awt.Color(102, 51, 0));
+        combo_tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tanggal", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+        combo_tanggal.setBorder(null);
+        getContentPane().add(combo_tanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, -1, 20));
+
+        combo_bulan.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        combo_bulan.setForeground(new java.awt.Color(102, 51, 0));
+        combo_bulan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" }));
+        combo_bulan.setBorder(null);
+        getContentPane().add(combo_bulan, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, -1, 20));
+
+        text_tahun.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_tahun.setForeground(new java.awt.Color(102, 51, 0));
+        text_tahun.setText("Tahun");
+        text_tahun.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        getContentPane().add(text_tahun, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 350, 80, -1));
+
+        jScrollPane1.setForeground(new java.awt.Color(102, 51, 0));
+
+        tabel_rincian.setFont(new java.awt.Font("Century Gothic", 0, 11)); // NOI18N
+        tabel_rincian.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Tanggal", "Tabungan"
+            }
+        ));
+        tabel_rincian.setSelectionBackground(new java.awt.Color(255, 255, 153));
+        tabel_rincian.setSelectionForeground(new java.awt.Color(78, 39, 0));
+        tabel_rincian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_rincianMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabel_rincian);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, 490, 110));
+
+        bt_edit.setBackground(new java.awt.Color(255, 255, 255));
+        bt_edit.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        bt_edit.setForeground(new java.awt.Color(102, 51, 0));
+        bt_edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/edit_cover [#1481].png"))); // NOI18N
+        bt_edit.setText("Ubah");
+        bt_edit.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 1, 11))); // NOI18N
+        bt_edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_editActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bt_edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 380, 90, -1));
+
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(102, 51, 0));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 550, 56, -1));
+
+        text_kurang.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_kurang.setForeground(new java.awt.Color(102, 51, 0));
+        text_kurang.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_kurang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                text_kurangActionPerformed(evt);
+            }
+        });
+        getContentPane().add(text_kurang, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 550, 180, -1));
+
+        jLabel6.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel6.setText("Nama");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, 66, -1));
+
+        jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel8.setText("ID Jamaah");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 66, -1));
+
+        text_nama.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_nama.setForeground(new java.awt.Color(102, 51, 0));
+        text_nama.setText("Nama Jamaah");
+        getContentPane().add(text_nama, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 230, 279, -1));
+
+        text_id_jamaah.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_id_jamaah.setForeground(new java.awt.Color(102, 51, 0));
+        text_id_jamaah.setText("ID Jamaah");
+        getContentPane().add(text_id_jamaah, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
+
+        text_jenis.setFont(new java.awt.Font("Tw Cen MT", 0, 14)); // NOI18N
+        text_jenis.setForeground(new java.awt.Color(102, 51, 0));
+        text_jenis.setText("JENIS HAJI");
+        getContentPane().add(text_jenis, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, -1, -1));
+
+        text_id.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_id.setForeground(new java.awt.Color(102, 51, 0));
+        text_id.setText("0");
+        getContentPane().add(text_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 30, 20));
+
+        text_batas.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_batas.setForeground(new java.awt.Color(102, 51, 0));
+        text_batas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_batas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                text_batasActionPerformed(evt);
+            }
+        });
+        getContentPane().add(text_batas, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 290, 370, -1));
+
+        bt_hapus.setBackground(new java.awt.Color(255, 255, 255));
+        bt_hapus.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        bt_hapus.setForeground(new java.awt.Color(102, 51, 0));
+        bt_hapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/delete [#1487].png"))); // NOI18N
+        bt_hapus.setText("Hapus");
+        bt_hapus.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Gothic", 1, 11))); // NOI18N
+        bt_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_hapusActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bt_hapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 380, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel1.setText("Total Biaya Haji");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, -1, -1));
+
+        bt_refresh.setBackground(new java.awt.Color(255, 255, 255));
+        bt_refresh.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        bt_refresh.setForeground(new java.awt.Color(102, 51, 0));
+        bt_refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/arrow_repeat [#235].png"))); // NOI18N
+        bt_refresh.setText("Refresh");
+        bt_refresh.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        bt_refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_refreshActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bt_refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 230, 100, -1));
+
+        jLabel12.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel12.setText("Kurang");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 550, 56, -1));
+
+        jLabel13.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel13.setText("Total");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 550, 56, -1));
+
+        text_jumlah.setFont(new java.awt.Font("Century Gothic", 1, 11)); // NOI18N
+        text_jumlah.setForeground(new java.awt.Color(102, 51, 0));
+        text_jumlah.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        text_jumlah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                text_jumlahActionPerformed(evt);
+            }
+        });
+        getContentPane().add(text_jumlah, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 550, 180, -1));
+
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabungan_haji/BACKGROUNDNABUNG.jpg"))); // NOI18N
+        jLabel2.setText("Kelompok 2 Kelas F");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 580, 600));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void text_kurangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_kurangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_kurangActionPerformed
+
+    private void bt_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_simpanActionPerformed
+        // TODO add your handling code here:
+        String idjamaah = text_id_jamaah.getText();
+        String nama = text_nama.getText();
+        String angsuran = text_angsuran.getText();
+        String tanggal_angsuran = combo_tanggal.getSelectedItem().toString();
+        String bulan_angsuran = combo_bulan.getSelectedItem().toString();
+        String tahun_angsuran = text_tahun.getText();
+            
+            try{   
+                String sql = "insert into rincian "
+                        + "(tanggal_nabung,bulan_nabung,tahun_nabung,tabungan,id_jamaah) values ("
+                        +"'"+tanggal_angsuran+"', "
+                        +"'"+bulan_angsuran+"',"
+                        +"'"+tahun_angsuran+"',"
+                        +"'"+angsuran+"',"
+                        +"'"+idjamaah+"'"
+                        +")";
+                
+                
+                Connection conn = (Connection)tabungan_haji.koneksi.koneksiDB();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.execute();
+                JOptionPane.showMessageDialog(null, "Data telah disimpan", "Simpan Data", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("icons8-save-48.png"));
+                kosongForm();
+                model();
+                jumlah();
+                batasjumlah();
+            }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            
+        }            
+    }//GEN-LAST:event_bt_simpanActionPerformed
+
+    private void bt_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_batalActionPerformed
+        // TODO add your handling code here:
+        Home n = new Home();
+        n.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_bt_batalActionPerformed
+
+    private void bt_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editActionPerformed
+        // TODO add your handling code here:
+        String idjamaah = text_id_jamaah.getText();
+        String id = text_id.getText();
+        String jenis = text_jenis.getText();
+        String angsuran = text_angsuran.getText();
+        String tanggal = combo_tanggal.getSelectedItem().toString();
+        String bulan = combo_bulan.getSelectedItem().toString();
+        String tahun = text_tahun.getText();
+        
+        try{
+            String sql = "update rincian set "
+                    
+                    +"tanggal_nabung ='"+tanggal
+                    +"',bulan_nabung ='"+bulan
+                    +"',tahun_nabung ='"+tahun
+                    +"',tabungan ='"+angsuran
+                    +"'where id="+id;
+            
+            
+            
+            Connection conn = (Connection)tabungan_haji.koneksi.koneksiDB();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
+            JOptionPane.showMessageDialog(null, "Data telah diubah", "Edit Data", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("icons8-save-as-48.png"));
+            kosongForm();
+            model();
+            jumlah();
+            batasjumlah();
+            this.komponen("edit");
+        }catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        
+    }//GEN-LAST:event_bt_editActionPerformed
+
+    private void tabel_rincianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_rincianMouseClicked
+        // TODO add your handling code here:
+        try {
+            int row = tabel_rincian.rowAtPoint(evt.getPoint());
+
+            String id = tabel_rincian.getValueAt(row, 0).toString();
+            String tanggal = tabel_rincian.getValueAt(row, 1).toString();
+            String bulan = tabel_rincian.getValueAt(row, 2).toString();
+            String tahun = tabel_rincian.getValueAt(row, 3).toString();
+            String angsuran = tabel_rincian.getValueAt(row, 4).toString();
+
+            text_id.setText(String.valueOf(id));
+            combo_tanggal.getModel().setSelectedItem(String.valueOf(tanggal));
+            combo_bulan.getModel().setSelectedItem(String.valueOf(bulan));
+            text_tahun.setText(String.valueOf(tahun));
+            text_angsuran.setText(String.valueOf(angsuran));
+            
+            this.komponen("klik");
+            jumlah();
+         
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_tabel_rincianMouseClicked
+
+    private void bt_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_hapusActionPerformed
+        // TODO add your handling code here:
+        String id = text_id.getText();
+            
+        try{
+            String sql = "delete from rincian where id ='"+id+"'";
+                    
+            Connection conn = (Connection)tabungan_haji.koneksi.koneksiDB();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.execute();
+            JOptionPane.showMessageDialog(null, "Data telah dihapus", "Hapus Data", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("icons8-trash-can-48.png"));
+            kosongForm();
+            model();
+            jumlah();
+            batasjumlah();
+        }catch (SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_bt_hapusActionPerformed
+
+    private void text_batasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_batasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_batasActionPerformed
+
+    private void bt_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_refreshActionPerformed
+        // TODO add your handling code here:
+        kosongForm();
+        this.komponen("awal");
+    }//GEN-LAST:event_bt_refreshActionPerformed
+
+    private void text_angsuranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_angsuranActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_angsuranActionPerformed
+
+    private void text_jumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_jumlahActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_text_jumlahActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Nabung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Nabung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Nabung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Nabung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Nabung(idjamaahVar, namaVar,jenisVar,batasVar).setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_batal;
+    private javax.swing.JButton bt_edit;
+    private javax.swing.JButton bt_hapus;
+    private javax.swing.JButton bt_refresh;
+    private javax.swing.JButton bt_simpan;
+    private javax.swing.JComboBox combo_bulan;
+    private javax.swing.JComboBox combo_tanggal;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabel_rincian;
+    private javax.swing.JTextField text_angsuran;
+    private javax.swing.JTextField text_batas;
+    private javax.swing.JLabel text_id;
+    private javax.swing.JLabel text_id_jamaah;
+    private javax.swing.JLabel text_jenis;
+    private javax.swing.JTextField text_jumlah;
+    private javax.swing.JTextField text_kurang;
+    private javax.swing.JLabel text_nama;
+    private javax.swing.JTextField text_tahun;
+    // End of variables declaration//GEN-END:variables
+}
