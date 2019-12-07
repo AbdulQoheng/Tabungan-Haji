@@ -8,6 +8,6 @@ Hasil project dari belajar Algoritma Pemrograman di Universitas Islam Negeri Mal
 4. M. Farhanudin (18650058) [@m.farhan_aan](https://instagram.com/m.farhan_aan)
 
 ## tampilan
-![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/master/Tabungan-Haji/screen/1.png)
-![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/master/Tabungan-Haji/screen/2.png)
-![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/master/Tabungan-Haji/screen/3.png)
+![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/Tabungan-Haji/master/screen/1.png)
+![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/Tabungan-Haji/master/screen/2.png)
+![screenshoot](https://raw.githubusercontent.com/AbdulQoheng/Tabungan-Haji/master/screen/3.png)
